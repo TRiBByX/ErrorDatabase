@@ -32,3 +32,9 @@ def add_error(conn, error):
     cur.execute(sql, error)
 
     return cur.lastrowid
+
+
+def delete_error(conn, id):
+    sql = """ DELETE FROM errors WHERE id=? """
+    cur = conn.cursor()
+    cur.execute(sql, (id,))

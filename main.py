@@ -25,7 +25,7 @@ def main():
         print('An error occured with the creation of the error table')
 '''
 
-
+'''
 def main():
 
     database = os.path.join('model/', 'errordb.db')
@@ -38,6 +38,18 @@ def main():
                  'Weird Casue', 'Christoffer', 'Christoffer')
 
         databasehandler.add_error(conn, error)
+
+'''
+
+
+def main():
+
+    database = os.path.join('model/', 'errordb.db')
+
+    conn = databasehandler.create_connection(database)
+
+    with conn:
+        databasehandler.delete_error(conn, 1)
 
 
 if __name__ == '__main__':
