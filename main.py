@@ -1,7 +1,7 @@
 from handlers import databasehandler
 import os
 
-
+'''
 def main():
     database = os.path.join('model/', 'errordb.db')
 
@@ -23,6 +23,21 @@ def main():
         databasehandler.create_table(conn, sql_create_table)
     else:
         print('An error occured with the creation of the error table')
+'''
+
+
+def main():
+
+    database = os.path.join('model/', 'errordb.db')
+
+    conn = databasehandler.create_connection(database)
+
+    with conn:
+        error = ('Something went wrong', 'commenting on this',
+                 '04-10-2017', '04-10-2017', '05-10-2017',
+                 'Weird Casue', 'Christoffer', 'Christoffer')
+
+        databasehandler.add_error(conn, error)
 
 
 if __name__ == '__main__':
