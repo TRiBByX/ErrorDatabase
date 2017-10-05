@@ -13,10 +13,24 @@ def create_connection(db_file):
         print(e)
 
 
-def create_table(conn, create_table_sql):
+def create_table(conn):
+
+    sql = """ CREATE TABLE IF NOT EXISTS errors (
+                                id integer PRIMARY KEY,
+                                description text,
+                                comment text,
+                                discovery_date text,
+                                last_work_date text,
+                                fixed_date text NOT NULL,
+                                cause text NOT NULL,
+                                discovered_by text,
+                                fixed_by text
+                            );
+          """
+
     try:
         c = conn.cursor()
-        c.execute(create_table_sql)
+        c.execute(sql)
     except Error as e:
         print(e)
 
@@ -38,3 +52,36 @@ def delete_error(conn, id):
     sql = """ DELETE FROM errors WHERE id=? """
     cur = conn.cursor()
     cur.execute(sql, (id,))
+
+
+def load_all_errors(conn):
+    sql = """ SELECT * FROM errors """
+    cur = conn.cursor()
+    cur.execute(sql)
+
+    rows = cur.fetchall()
+
+    return rows
+
+
+def find_error_by_id(conn, id):
+
+    sql = """ SELECT * FROM errors WHERE id=? """
+    cur = conn.cursor()
+    cur.execute(sql, (id,))
+
+    rows = cur.fetchall()
+
+    return rows
+
+
+def update_error(conn, error):
+
+    sql = """ UPDATE errors
+              SET description = ?,
+                  comment = ?,
+                  fixed_date = ?
+              WHERE id = ? """
+
+    cur = conn.cursor()
+    cur.execute(sql, error)
