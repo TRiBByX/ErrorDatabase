@@ -49,7 +49,10 @@ def main():
     conn = databasehandler.create_connection(database)
 
     with conn:
-        databasehandler.delete_error(conn, 1)
+        rows = databasehandler.load_all_errors(conn)
+
+    for row in rows:
+        print(row)
 
 
 if __name__ == '__main__':
