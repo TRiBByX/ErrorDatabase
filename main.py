@@ -1,23 +1,19 @@
 from handlers import databasehandler
-import os
+from classes import error
+from datetime import datetime
 
 '''
 def main():
-    database = os.path.join('model/', 'errordb.db')
-
     sql_create_table = """ CREATE TABLE IF NOT EXISTS errors (
                                 id integer PRIMARY KEY,
-                                description text,
-                                comment text,
-                                discovery_date text,
-                                last_work_date text,
-                                fixed_date text NOT NULL,
-                                cause text NOT NULL,
-                                discovered_by text,
-                                fixed_by text
+                                description text NOT NULL,
+                                cause text,
+                                user text NOT NULL,
+                                found_time datetime,
+                                fixed_time datetime
                             );
                        """
-    conn = databasehandler.create_connection(database)
+    conn = databasehandler.create_connection()
 
     if conn is not None:
         databasehandler.create_table(conn, sql_create_table)
@@ -43,13 +39,12 @@ def main():
 
 
 def main():
+    newerror = error.Error('network went dark, hacking attack by lizard squad',
+                           'hack', 'Christoffer', datetime.today(), None)
 
-    database = os.path.join('model/', 'errordb.db')
+    conn = newerror.add_to_db()
 
-    conn = databasehandler.create_connection(database)
-
-    with conn:
-        rows = databasehandler.load_all_errors(conn)
+    rows = databasehandler.load_all_errors(conn)
 
     for row in rows:
         print(row)

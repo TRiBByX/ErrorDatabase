@@ -1,10 +1,12 @@
 import sqlite3
 from sqlite3 import Error
+import os
 
-DIR = '../model/'
+DIR = './model/'
 
 
-def create_connection(db_file):
+def create_connection():
+    db_file = os.path.join(DIR, 'errordbv2.db')
 
     try:
         conn = sqlite3.connect(db_file)
@@ -13,21 +15,7 @@ def create_connection(db_file):
         print(e)
 
 
-def create_table(conn):
-
-    sql = """ CREATE TABLE IF NOT EXISTS errors (
-                                id integer PRIMARY KEY,
-                                description text,
-                                comment text,
-                                discovery_date text,
-                                last_work_date text,
-                                fixed_date text NOT NULL,
-                                cause text NOT NULL,
-                                discovered_by text,
-                                fixed_by text
-                            );
-          """
-
+def create_table(conn, sql):
     try:
         c = conn.cursor()
         c.execute(sql)
@@ -36,11 +24,8 @@ def create_table(conn):
 
 
 def add_error(conn, error):
-    sql = """ INSERT INTO errors(description,
-                                 comment, discovery_date,
-                                 last_work_date, fixed_date,
-                                 cause, discovered_by, fixed_by)
-              VALUES(?,?,?,?,?,?,?,?) """
+    sql = """ INSERT INTO errors(description, cause, user, found_time, fixed_time)
+              VALUES(?,?,?,?,?) """
 
     cur = conn.cursor()
     cur.execute(sql, error)
@@ -79,8 +64,9 @@ def update_error(conn, error):
 
     sql = """ UPDATE errors
               SET description = ?,
-                  comment = ?,
-                  fixed_date = ?
+                  cause = ?,
+                  user = ?,
+                  fixed_time = ?
               WHERE id = ? """
 
     cur = conn.cursor()
